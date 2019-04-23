@@ -1,3 +1,5 @@
+#include <utility>
+
 #include <memory>
 
 #include <utility>
@@ -115,6 +117,31 @@ std::shared_ptr<Base> Directory::get(std::string name) {
         exit(-1);
     }
 
+}
+
+std::shared_ptr<Directory> Directory::getDir(std::string name) {
+
+    try {
+        std::shared_ptr<Directory> dp = std::dynamic_pointer_cast<Directory>(this->get(std::move(name)));
+        if(dp == nullptr)
+            std::cerr<<"not found directory"<<std::endl;
+        return dp;
+    }catch (std::bad_cast &bc){
+        std::cerr<<bc.what();
+        exit(-1);
+    }
+}
+
+std::shared_ptr<File> Directory::getFile(std::string name) {
+    try {
+        std::shared_ptr<File> fp = std::dynamic_pointer_cast<File>(this->get(std::move(name)));
+        if(fp == nullptr)
+            std::cerr<<"not found directory"<<std::endl;
+        return fp;
+    }catch (std::bad_cast &bc){
+        std::cerr<<bc.what();
+        exit(-1);
+    }
 }
 
 

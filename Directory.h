@@ -47,6 +47,10 @@ public:
 
     std::shared_ptr<Base> get(std::string name);
 
+    std::shared_ptr<Directory> getDir(std::string name);
+
+    std::shared_ptr<File> getFile(std::string name);
+
     ~Directory();
 
 protected:

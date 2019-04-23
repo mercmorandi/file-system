@@ -10,11 +10,14 @@
 #include "Base.h"
 #include <memory>
 #include <vector>
+#include "File.h"
+#include <map>
 
 
 class Directory : public Base {
 
-    std::vector<std::shared_ptr<Base>> inside;
+    //std::vector<std::shared_ptr<Base>> inside;
+    std::map<std::string, std::shared_ptr<Base>> inside;
     std::weak_ptr<Directory> father;
     std::weak_ptr<Directory> mySelf;
 
@@ -34,11 +37,15 @@ public:
 
     int mType() const override;
 
-    void ls(int) const override;
+    void ls(int indent = 0) const override;
 
     static std::shared_ptr<Directory> getRoot();
 
     std::shared_ptr<Directory> addDirectory(std::string name);
+
+    std::shared_ptr<File> addFile(std::string name, uintmax_t size);
+
+    std::shared_ptr<Base> get(std::string name);
 
     ~Directory();
 

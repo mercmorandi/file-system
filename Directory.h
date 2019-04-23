@@ -51,6 +51,8 @@ public:
 
     std::shared_ptr<File> getFile(std::string name);
 
+    void remove(std::string name);
+
     ~Directory();
 
 protected:

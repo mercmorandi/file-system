@@ -144,6 +144,18 @@ std::shared_ptr<File> Directory::getFile(std::string name) {
     }
 }
 
+void Directory::remove(std::string name) {
+    try{
+        if(name == ".." || name ==".")
+            throw(name);
+        //TODO add function to remove recursively all objects from a directory
+
+    }catch (std::string &name){
+        std::cerr<<"operation not allowed!"<<std::endl;
+        exit(-1);
+    }
+}
+
 
 Directory::Directory() = default;
 

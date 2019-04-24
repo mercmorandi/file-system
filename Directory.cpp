@@ -14,6 +14,7 @@
 
 #include <utility>
 #include <iostream>
+#include <iomanip>
 
 //
 // Created by merkm on 21/04/2019.
@@ -28,6 +29,15 @@ int Directory::mType() const {
 }
 
 void Directory::ls(int indent) const {
+    std::cout<<std::setfill(' ')<<std::setw(indent)<<"[+] "<<this->getName()<<std::endl;
+    for(auto & it : this->inside){
+        if(it.second->mType() == 1){
+            std::cout<<std::setfill(' ')<<std::setw(indent+6)<<it.second->getName()<<" "<<std::dynamic_pointer_cast<File>(it.second)->getSize()<<std::endl;
+        }
+        else
+            it.second -> ls(indent+6);
+    }
+
 
 }
 
@@ -35,7 +45,7 @@ std::shared_ptr<Directory> Directory::getRoot() {
 
     if (!Directory::rootInstance) {
 
-        Directory::rootInstance = std::shared_ptr<Directory>(new Directory("root"));
+        Directory::rootInstance = std::shared_ptr<Directory>(new Directory("/"));
         Directory::rootInstance.get()->setMySelf(Directory::rootInstance);
     }
     return Directory::rootInstance;
@@ -108,8 +118,8 @@ std::shared_ptr<Base> Directory::get(std::string name) {
     try{
         std::map<std::string,std::shared_ptr<Base>>::iterator it;
         it = this->inside.find(name);
-        if(it -> first.empty())
-            throw name;
+        if(it == this->inside.end())
+            throw (name);
         return it ->second;
 
     } catch (std::string &name){
@@ -136,7 +146,7 @@ std::shared_ptr<File> Directory::getFile(std::string name) {
     try {
         std::shared_ptr<File> fp = std::dynamic_pointer_cast<File>(this->get(std::move(name)));
         if(fp == nullptr)
-            std::cerr<<"not found directory"<<std::endl;
+            std::cerr<<"file not found"<<std::endl;
         return fp;
     }catch (std::bad_cast &bc){
         std::cerr<<bc.what();
@@ -148,12 +158,41 @@ void Directory::remove(std::string name) {
     try{
         if(name == ".." || name ==".")
             throw(name);
-        //TODO add function to remove recursively all objects from a directory
+        //TODO idk if erasing the ptr to a dir inside the map is enough maybe it needs recursive erasing?
+        std::shared_ptr<Base> obj_ptr = this->get(name);
+        //case of file
+        this->inside.erase(name);
+        /*if(obj_ptr->mType() == 1){
+            //removeFile(std::dynamic_pointer_cast<File>(obj_ptr));
+            this->inside.erase(obj_ptr->getName());
+            return;
+        }
+        //case of dir
+        else{
+            removeDir(std::dynamic_pointer_cast<Directory>(obj_ptr));
+            this->inside.erase(name);
+            return;
+        }*/
+
+
+
 
     }catch (std::string &name){
         std::cerr<<"operation not allowed!"<<std::endl;
         exit(-1);
     }
+}
+
+void Directory::removeDir(std::shared_ptr<Directory> sharedPtr) {
+    //std::map<std::string,std::shared_ptr<Base>>::iterator it;
+    for(auto & it : sharedPtr->inside){
+        sharedPtr->remove(it.first);
+    }
+
+}
+
+void Directory::removeFile(std::shared_ptr<File> sharedPtr) {
+    this->inside.erase(sharedPtr->getName());
 }
 
 

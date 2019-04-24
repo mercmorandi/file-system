@@ -1,15 +1,20 @@
 #include <iostream>
 #include <memory>
+#include <iomanip>
 #include "Directory.h"
 
 int main() {
+
+    std::cout<<std::setfill(' ')<<std::setw(10)<<"suca"<<std::endl;
     std::cout << "Hello, World!" << std::endl;
     std::shared_ptr<Directory> root = Directory::getRoot();
-    //std::cout<<"nome cartella: "<<root.get()->getName()<<std::endl;
     auto alfa = root->addDirectory("alfa");
-    alfa -> addDirectory( "beta" ) -> addFile( "beta1" , 100 );
-    alfa -> getDir( "beta" ) -> addFile( "beta2" , 200 );
-    alfa -> getDir("..") ->addFile("alfa1", 50);
-    std::cout<<"alfa1: "<< root -> getFile("alfa1") -> getName()<<std::endl;
+    root ->ls();
+    root -> addDirectory( "beta" ) -> addFile( "beta1" , 100 );
+    root -> ls();
+    root -> getDir( "beta" ) -> addFile( "beta2" , 200 );
+    alfa -> getDir("..") ->ls();
+    root -> remove("beta");
+    root -> ls();
     return 0;
 }

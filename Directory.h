@@ -60,7 +60,9 @@ protected:
 
     explicit Directory(std::string name);
 
+    void removeFile(std::shared_ptr<File> sharedPtr);
 
+    void removeDir(std::shared_ptr<Directory> sharedPtr);
 };
 
 
